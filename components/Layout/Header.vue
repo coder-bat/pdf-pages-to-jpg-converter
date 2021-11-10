@@ -50,7 +50,7 @@
           class="
             space-y-2
             list-none
-            flex flex-col
+            flex flex-col md:flex-row
             justify-end
             items-end
             lg:space-y-0 lg:items-center lg:inline-flex

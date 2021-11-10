@@ -237,9 +237,11 @@ Have a good day!"
         m-auto
       "
     >
-      <h1 class="text-2xl font-bold">Conversion completed</h1>
+      <h1 v-if="converting" class="text-2xl font-bold">Converting ...</h1>
+      <h1 v-else class="text-2xl font-bold">Conversion complete</h1>
       <div class="flex flex-col gap-6 md:flex-row w-full md:w-auto">
         <button
+          v-if="!converting"
           class="
             inline-flex
             w-full
@@ -268,6 +270,7 @@ Have a good day!"
           Download All
         </button>
         <button
+          v-if="!converting"
           class="
             inline-flex
             w-full
@@ -429,13 +432,14 @@ export default {
       typeError: false,
       conversionQuality: 1,
       selectedQuality: 3,
+      converting: true,
     }
   },
   methods: {
     scanPdf() {
       pdfjsLib.disableWorker = true
       const file = this.filelist[0]
-
+      this.converting = true
       const fileReader = new FileReader()
       fileReader.onload = (e) => {
         const typedarray = new Uint8Array(e.target.result)
@@ -461,6 +465,9 @@ export default {
                   return canvas.toDataURL('image/jpeg')
                 })
               )
+              if (this.pagesToImages.length === pdf.numPages) {
+                this.converting = false
+              }
             })
           }
         })
